@@ -16,6 +16,7 @@ import {
 	type SelfUpdatePackageTarget,
 	VERSION,
 } from "./config.ts";
+import { createAgentSessionServices } from "./core/agent-session-services.ts";
 import type { InlineExtension } from "./core/extensions/types.ts";
 import { ModelRuntime } from "./core/model-runtime.ts";
 import { DefaultPackageManager } from "./core/package-manager.ts";
@@ -90,14 +91,21 @@ function getPackageCommandUsage(command: PackageCommand): string {
 }
 
 const CONFIG_COMMAND_USAGE = `${APP_NAME} config [-l] [--approve|--no-approve]`;
+const CONFIG_SET_MODEL_USAGE = `${APP_NAME} config set-model <provider>/<model> [-l|--local] [-a|--approve|-na|--no-approve]`;
 
 function printConfigCommandHelp(): void {
 	console.log(`${chalk.bold("Usage:")}
   ${CONFIG_COMMAND_USAGE}
+  ${CONFIG_SET_MODEL_USAGE}
 
 Open the resource configuration TUI to enable or disable package resources.
 Without -l, starts in global settings (~/${CONFIG_DIR_NAME}/agent/settings.json).
 Press Tab in the TUI to switch between global and project-local modes.
+
+Subcommands:
+  set-model <provider>/<model>  Set (or override) the default model for the current
+                                session's scope without affecting an active session.
+                                Writes the persisted default provider/model setting.
 
 Options:
   -l, --local       Edit project overrides (${CONFIG_DIR_NAME}/settings.json)
@@ -616,6 +624,10 @@ export async function handleConfigCommand(
 		return true;
 	}
 
+	if (rest[0] === "set-model") {
+		return handleConfigSetModel(rest.slice(1), runtimeOptions);
+	}
+
 	let local = false;
 	let projectTrustOverride: boolean | undefined;
 	for (const arg of rest) {
@@ -672,6 +684,107 @@ export async function handleConfigCommand(
 		projectModeAvailable: settingsManager.isProjectTrusted(),
 	});
 
+	process.exit(0);
+}
+
+/**
+ * `pi config set-model <provider>/<model>` — persist the default provider/model
+ * without mutating any active session. Model switching within a session (/model,
+ * cycling) is session-scoped and never calls this.
+ */
+async function handleConfigSetModel(
+	args: string[],
+	runtimeOptions: PackageCommandRuntimeOptions = {},
+): Promise<boolean> {
+	if (args.includes("-h") || args.includes("--help")) {
+		printConfigCommandHelp();
+		return true;
+	}
+
+	let local = false;
+	let projectTrustOverride: boolean | undefined;
+	let modelArg: string | undefined;
+	for (const arg of args) {
+		if (arg === "-l" || arg === "--local") {
+			local = true;
+		} else if (arg === "-a" || arg === "--approve") {
+			projectTrustOverride = true;
+		} else if (arg === "-na" || arg === "--no-approve") {
+			projectTrustOverride = false;
+		} else if (arg.startsWith("-")) {
+			console.error(chalk.red(`Unknown option ${arg} for "config set-model".`));
+			console.error(chalk.dim(`Use "${APP_NAME} --help" or "${CONFIG_SET_MODEL_USAGE}".`));
+			process.exitCode = 1;
+			return true;
+		} else if (modelArg === undefined) {
+			modelArg = arg;
+		} else {
+			console.error(chalk.red(`Unexpected argument ${arg}.`));
+			console.error(chalk.dim(`Usage: ${CONFIG_SET_MODEL_USAGE}`));
+			process.exitCode = 1;
+			return true;
+		}
+	}
+
+	if (!modelArg) {
+		console.error(chalk.red(`Missing model for "config set-model".`));
+		console.error(chalk.dim(`Usage: ${CONFIG_SET_MODEL_USAGE}`));
+		process.exitCode = 1;
+		return true;
+	}
+
+	const slash = modelArg.indexOf("/");
+	if (slash <= 0 || slash === modelArg.length - 1) {
+		console.error(chalk.red(`Expected a model in the form <provider>/<model>, got "${modelArg}".`));
+		process.exitCode = 1;
+		return true;
+	}
+	const provider = modelArg.slice(0, slash);
+	const modelId = modelArg.slice(slash + 1);
+
+	const cwd = process.cwd();
+	const agentDir = getAgentDir();
+	const { settingsManager, projectTrustWarnings } = await createCommandSettingsManager({
+		cwd,
+		agentDir,
+		projectTrustOverride,
+		extensionFactories: runtimeOptions.extensionFactories,
+	});
+	reportProjectTrustWarnings(projectTrustWarnings);
+	if (local && !settingsManager.isProjectTrusted()) {
+		console.error(chalk.red("Project is not trusted. Use --approve to write local resource config."));
+		process.exitCode = 1;
+		return true;
+	}
+	reportSettingsErrors(settingsManager, "config command");
+
+	// Build the runtime (including extension-registered providers) so we can validate
+	// the model id. A signal bounds the model catalog refresh.
+	let services: Awaited<ReturnType<typeof createAgentSessionServices>>;
+	try {
+		services = await createAgentSessionServices({
+			cwd,
+			agentDir,
+			settingsManager,
+			modelRuntimeSignal: AbortSignal.timeout(15_000),
+		});
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		console.error(chalk.red(`Could not resolve model catalog: ${message}`));
+		process.exitCode = 1;
+		return true;
+	}
+	const model = services.modelRuntime.getModel(provider, modelId);
+	if (!model) {
+		console.error(chalk.red(`Model "${provider}/${modelId}" not found.`));
+		console.error(chalk.dim(`Use "${APP_NAME} --list-models" to see available models.`));
+		process.exitCode = 1;
+		return true;
+	}
+
+	settingsManager.setDefaultModelAndProvider(provider, modelId, local ? "project" : "global");
+	await settingsManager.flush();
+	console.log(chalk.dim(`Set default model: ${provider}/${modelId}${local ? " (project)" : ""}`));
 	process.exit(0);
 }
 

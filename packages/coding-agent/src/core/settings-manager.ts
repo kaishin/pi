@@ -699,7 +699,17 @@ export class SettingsManager {
 		this.save();
 	}
 
-	setDefaultModelAndProvider(provider: string, modelId: string): void {
+	setDefaultModelAndProvider(provider: string, modelId: string, scope: SettingsScope = "global"): void {
+		if (scope === "project") {
+			this.assertProjectTrustedForWrite();
+			const project = structuredClone(this.projectSettings);
+			project.defaultProvider = provider;
+			project.defaultModel = modelId;
+			this.markProjectModified("defaultProvider");
+			this.markProjectModified("defaultModel");
+			this.saveProjectSettings(project);
+			return;
+		}
 		this.globalSettings.defaultProvider = provider;
 		this.globalSettings.defaultModel = modelId;
 		this.markModified("defaultProvider");

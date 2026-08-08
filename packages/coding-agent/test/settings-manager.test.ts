@@ -581,4 +581,44 @@ describe("SettingsManager", () => {
 			expect(manager.getShellPath()).toBe(homedir());
 		});
 	});
+
+	describe("setDefaultModelAndProvider scope", () => {
+		it("writes default provider/model to the global settings by default", async () => {
+			const manager = SettingsManager.create(projectDir, agentDir);
+			manager.setDefaultModelAndProvider("anthropic", "claude-sonnet");
+			await manager.flush();
+
+			expect(manager.getDefaultProvider()).toBe("anthropic");
+			expect(manager.getDefaultModel()).toBe("claude-sonnet");
+			const global = JSON.parse(readFileSync(join(agentDir, "settings.json"), "utf-8"));
+			expect(global.defaultProvider).toBe("anthropic");
+			expect(global.defaultModel).toBe("claude-sonnet");
+			expect(existsSync(join(projectDir, ".pi", "settings.json"))).toBe(false);
+		});
+
+		it("writes default provider/model to the project settings with project scope", async () => {
+			const manager = SettingsManager.create(projectDir, agentDir);
+			manager.setProjectTrusted(true);
+			manager.setDefaultModelAndProvider("anthropic", "claude-opus", "project");
+			await manager.flush();
+
+			expect(manager.getDefaultProvider()).toBe("anthropic");
+			expect(manager.getDefaultModel()).toBe("claude-opus");
+			const project = JSON.parse(readFileSync(join(projectDir, ".pi", "settings.json"), "utf-8"));
+			expect(project.defaultProvider).toBe("anthropic");
+			expect(project.defaultModel).toBe("claude-opus");
+			expect(existsSync(join(agentDir, "settings.json"))).toBe(false);
+		});
+
+		it("project-scoped default overrides the global default in merged settings", async () => {
+			const manager = SettingsManager.create(projectDir, agentDir);
+			manager.setDefaultModelAndProvider("deepseek", "deepseek-chat");
+			manager.setProjectTrusted(true);
+			manager.setDefaultModelAndProvider("openai", "gpt-4o", "project");
+			await manager.flush();
+
+			expect(manager.getDefaultProvider()).toBe("openai");
+			expect(manager.getDefaultModel()).toBe("gpt-4o");
+		});
+	});
 });
