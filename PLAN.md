@@ -8,9 +8,11 @@ Fork of [earendil-works/pi](https://github.com/earendil-works/pi). This document
 
 Change the model mid-session without touching config files.
 
-- [ ] Design the mechanism (session-scoped override, CLI command, UX)
-- [ ] Implement
-- [ ] Test
+- [x] Design the mechanism (session-scoped override, CLI command, UX)
+- [x] Implement — `/model`, Ctrl+P cycling, and the model selector no longer write to settings; only `agent.state.model` + session history change
+- [x] Add explicit persistence path: `pi config set-model <provider>/<model> [-l|--local]`
+- [x] Test — verified with `./pi-test.sh`: session switches leave `settings.json` untouched; Homebrew pi 0.84.1 (old behavior) still persists
+- [x] Committed as `11fd5175f`
 
 ### 2. First-class plugins in-repo
 
