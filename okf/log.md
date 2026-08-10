@@ -21,7 +21,7 @@
     * Work archived on subagents-vendoring-archive (includes two fixes that were not subagent-specific: the "private": true artifact-packaging false positive, and the clock-derived spinner frame)
     * PLAN.md and okf/plan.md mark pi-subagents abandoned and rescope Goal 3
   * **Open questions**:
-    * Do pi-goal, pi-tool-display and pi-session-naming still warrant vendoring, or did this attempt argue against vendoring generally?
+    * ~~Do pi-goal, pi-tool-display and pi-session-naming still warrant vendoring?~~ **Resolved 2026-08-10: yes, all three remain in scope for Goal 2.** The pi-subagents outcome is specific to that plugin, not an argument against vendoring.
     * If delegation is revisited, does it start from upstream again or from a design of our own?
 
 ## 2026-08-08
