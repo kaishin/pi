@@ -44,7 +44,8 @@ Integrate the plugins we use directly into the repo for more control. Everything
 
 Out-of-the-box support for agents — the delegation/autonomy layer, not just the runtime loop.
 
-- [ ] Define scope: subagent workflows, goal mode, interplay with session model
+- [ ] Define scope: goal mode, interplay with session model (subagent workflows are out of
+      scope after the pi-subagents attempt was abandoned)
 - [ ] Design the integration with vendored plugins
 - [ ] Implement
 - [ ] Test
