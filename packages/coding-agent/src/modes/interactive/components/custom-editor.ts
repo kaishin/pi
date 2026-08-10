@@ -2,6 +2,13 @@ import { Editor, type EditorOptions, type EditorTheme, type TUI } from "@earendi
 import type { AppKeybinding, KeybindingsManager } from "../../../core/keybindings.ts";
 
 /**
+ * Actions that only fire while the editor is empty, so their key keeps its ordinary meaning
+ * as soon as there is anything to type against. Tab is bound to model cycling this way: on an
+ * empty buffer it would otherwise trigger a file completion with no prefix to complete.
+ */
+const EMPTY_EDITOR_ONLY_ACTIONS: readonly AppKeybinding[] = ["app.model.cycleOnEmpty", "app.model.cycleBackOnEmpty"];
+
+/**
  * Custom editor that handles app-level keybindings for coding-agent.
  */
 export class CustomEditor extends Editor {
@@ -76,8 +83,22 @@ export class CustomEditor extends Editor {
 			return;
 		}
 
+		// Empty-editor-only actions. Anything typed hands the key straight back to the editor,
+		// so completion behaves exactly as before the moment the buffer is non-empty.
+		for (const action of EMPTY_EDITOR_ONLY_ACTIONS) {
+			if (!this.keybindings.matches(data, action)) continue;
+			const handler = this.actionHandlers.get(action);
+			if (handler && this.getText().trim().length === 0) {
+				handler();
+				return;
+			}
+			super.handleInput(data);
+			return;
+		}
+
 		// Check all other app actions
 		for (const [action, handler] of this.actionHandlers) {
+			if (EMPTY_EDITOR_ONLY_ACTIONS.includes(action)) continue;
 			if (action !== "app.interrupt" && action !== "app.exit" && this.keybindings.matches(data, action)) {
 				handler();
 				return;

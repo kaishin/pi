@@ -2801,6 +2801,8 @@ export class InteractiveMode {
 		this.defaultEditor.onAction("app.thinking.cycle", () => this.cycleThinkingLevel());
 		this.defaultEditor.onAction("app.model.cycleForward", () => this.cycleModel("forward"));
 		this.defaultEditor.onAction("app.model.cycleBackward", () => this.cycleModel("backward"));
+		this.defaultEditor.onAction("app.model.cycleOnEmpty", () => this.cycleModel("forward"));
+		this.defaultEditor.onAction("app.model.cycleBackOnEmpty", () => this.cycleModel("backward"));
 
 		// Global debug handler on TUI (works regardless of focus)
 		this.ui.onDebug = () => this.handleDebugCommand();
@@ -6132,6 +6134,7 @@ export class InteractiveMode {
 		const toggleThinking = this.getAppKeyDisplay("app.thinking.toggle");
 		const externalEditor = this.getAppKeyDisplay("app.editor.external");
 		const cycleModelBackward = this.getAppKeyDisplay("app.model.cycleBackward");
+		const cycleModelOnEmpty = this.getAppKeyDisplay("app.model.cycleOnEmpty");
 		const copyMessage = this.getAppKeyDisplay("app.message.copy");
 		const followUp = this.getAppKeyDisplay("app.message.followUp");
 		const dequeue = this.getAppKeyDisplay("app.message.dequeue");
@@ -6172,6 +6175,7 @@ export class InteractiveMode {
 | \`${suspend}\` | Suspend to background |
 | \`${cycleThinkingLevel}\` | Cycle thinking level |
 | \`${cycleModelForward}\` / \`${cycleModelBackward}\` | Cycle models |
+| \`${cycleModelOnEmpty}\` | Cycle models (empty editor only) |
 | \`${selectModel}\` | Open model selector |
 | \`${expandTools}\` | Toggle tool output expansion |
 | \`${toggleThinking}\` | Toggle thinking block visibility |

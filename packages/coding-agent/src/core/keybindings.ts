@@ -18,6 +18,8 @@ export interface AppKeybindings {
 	"app.thinking.cycle": true;
 	"app.model.cycleForward": true;
 	"app.model.cycleBackward": true;
+	"app.model.cycleOnEmpty": true;
+	"app.model.cycleBackOnEmpty": true;
 	"app.model.select": true;
 	"app.tools.expand": true;
 	"app.thinking.toggle": true;
@@ -77,6 +79,16 @@ export const KEYBINDINGS = {
 	"app.model.cycleForward": {
 		defaultKeys: "ctrl+p",
 		description: "Cycle to next model",
+	},
+	// Only fire on an empty editor, so the same key keeps its normal meaning while typing.
+	// Tab on an empty buffer otherwise triggers a file completion with nothing to complete.
+	"app.model.cycleOnEmpty": {
+		defaultKeys: "tab",
+		description: "Cycle to next model (empty editor only)",
+	},
+	"app.model.cycleBackOnEmpty": {
+		defaultKeys: [],
+		description: "Cycle to previous model (empty editor only)",
 	},
 	"app.model.cycleBackward": {
 		defaultKeys: "shift+ctrl+p",
