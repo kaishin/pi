@@ -19,7 +19,9 @@ Change the model mid-session without touching config files.
 Integrate the plugins we use directly into the repo for more control. Everything else stays installed as regular third-party extensions.
 
 **Built in (vendored in-repo):**
-- `pi-subagents` — single-agent delegation and scripted multi-agent workflows
+- ~~`pi-subagents`~~ — **tried and abandoned (2026-08-10).** Vendored, reshaped to 4 agents
+  and debugged for a day; the UX did not hold up. See the `subagents-vendoring-archive`
+  branch. Do not re-vendor without a decision to revisit.
 - `pi-goal` — persistent autonomous goals (`/goal`)
 - `pi-tool-display` — compact tool-call rendering
 - `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing
@@ -31,7 +33,7 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - `@kaishin/pi-bar` (status bar)
 
 - [ ] Pick vendoring approach per plugin (copy into `packages/`, workspace packages, etc.)
-- [ ] Vendor `pi-subagents`
+- [x] ~~Vendor `pi-subagents`~~ — abandoned, see above
 - [ ] Vendor `pi-goal`
 - [ ] Vendor `pi-tool-display`
 - [ ] Vendor `pi-session-naming`

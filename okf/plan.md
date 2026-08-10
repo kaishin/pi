@@ -37,7 +37,11 @@ Everything else stays installed as regular third-party extensions.
 
 **Built in (vendored in-repo):**
 
-- `pi-subagents` — single-agent delegation and scripted multi-agent workflows
+- ~~`pi-subagents`~~ — **tried and abandoned (2026-08-10).** It was vendored, reshaped
+  to a 4-agent set and debugged through a day of manual testing; the delegation UX
+  was not usable enough to keep. The work is preserved on the
+  `subagents-vendoring-archive` branch. Do not re-vendor without deciding to
+  revisit it.
 - `pi-goal` — persistent autonomous goals (`/goal`)
 - `pi-tool-display` — compact tool-call rendering
 - `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing
@@ -52,8 +56,9 @@ Everything else stays installed as regular third-party extensions.
 ## Goal 3: First-class agent support
 
 Out-of-the-box support for agents — the delegation/autonomy layer, not just the
-runtime loop. Scope: subagent workflows, goal mode, interplay with session
-model; built on the vendored plugins from Goal 2.
+runtime loop. Scope: goal mode and interplay with session model. Subagent
+workflows are **out of scope** after the pi-subagents attempt was abandoned; any
+future delegation work starts from a fresh decision, not from that branch.
 
 ## Notes
 
