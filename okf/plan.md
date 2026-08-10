@@ -48,9 +48,9 @@ Everything else stays installed as regular third-party extensions.
 
 **Stay third-party:**
 
-- `@sinamtz/pi-minimax-provider`, `pi-claude-bridge` (providers)
+- `@sinamtz/pi-minimax-provider` (providers)
 - `pi-mcp-adapter`, `betterwright`, `pi-cmux`, `@narumitw/pi-worktree` (tool integrations)
-- `pi-btw`, `pi-plan`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
+- `pi-btw`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
 - `@kaishin/pi-bar` (status bar)
 
 ## Goal 3: First-class agent support

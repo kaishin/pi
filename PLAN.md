@@ -27,9 +27,9 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing
 
 **Stay third-party:**
-- `@sinamtz/pi-minimax-provider`, `pi-claude-bridge` (providers)
+- `@sinamtz/pi-minimax-provider` (providers)
 - `pi-mcp-adapter`, `betterwright`, `pi-cmux`, `@narumitw/pi-worktree` (tool integrations)
-- `pi-btw`, `pi-plan`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
+- `pi-btw`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
 - `@kaishin/pi-bar` (status bar)
 
 - [ ] Pick vendoring approach per plugin (copy into `packages/`, workspace packages, etc.)
