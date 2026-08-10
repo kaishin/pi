@@ -32,11 +32,18 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - `pi-btw`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
 - `@kaishin/pi-bar` (status bar)
 
-- [ ] Pick vendoring approach per plugin (copy into `packages/`, workspace packages, etc.)
+- [x] Pick vendoring approach per plugin — copy the source into
+      `packages/coding-agent/src/extensions/<name>/`, rewrite package-name imports to relative
+      internal paths, inline any file assets as TS constants, and register the factory in
+      `builtInExtensions`
 - [x] ~~Vendor `pi-subagents`~~ — abandoned, see above
 - [ ] Vendor `pi-goal`
 - [ ] Vendor `pi-tool-display`
-- [ ] Vendor `pi-session-naming`
+- [x] Vendor `pi-session-naming` — 14 modules under
+      `packages/coding-agent/src/extensions/session-naming/`; the two prompt templates are
+      inlined in `prompts.ts` so the standalone binary needs no asset wiring; its own test
+      suite ported to vitest (7 files, 97 tests); `npm:@furbyhaxx/pi-session-naming` removed
+      from user settings so `/sessions`, `/rename`, and `--list-sessions` do not collide
 - [ ] Wire into the extension loader / default install
 - [ ] Test
 

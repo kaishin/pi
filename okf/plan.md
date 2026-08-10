@@ -42,9 +42,17 @@ Everything else stays installed as regular third-party extensions.
   was not usable enough to keep. The work is preserved on the
   `subagents-vendoring-archive` branch. Do not re-vendor without deciding to
   revisit it.
-- `pi-goal` — persistent autonomous goals (`/goal`)
-- `pi-tool-display` — compact tool-call rendering
-- `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing
+- `pi-goal` — persistent autonomous goals (`/goal`). Not started; leave for last because its
+  `skills/` directory needs the asset-discovery machinery that made the pi-subagents attempt
+  painful, and it overlaps Goal 3, which has no scope yet.
+- `pi-tool-display` — compact tool-call rendering. Not started; the strongest case for
+  vendoring (it monkey-patches internals from outside the repo) but also the largest, at
+  ~9.9k lines with no tests of its own.
+- `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing.
+  **Vendored (2026-08-11)** into `packages/coding-agent/src/extensions/session-naming/`.
+  Prompt templates are inlined as TS constants rather than shipped as `.md` assets, so the
+  Bun binary works without touching `copy-assets`. The upstream test suite was ported to
+  vitest as `test/session-naming-*.test.ts`.
 
 **Stay third-party:**
 
