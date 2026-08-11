@@ -25,12 +25,12 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - `pi-goal` — persistent autonomous goals (`/goal`)
 - `pi-tool-display` — compact tool-call rendering
 - `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing
+- `pi-bar` footer — fixed editorial footer with activity, usage, context, model, git, and statuses
 
 **Stay third-party:**
 - `@sinamtz/pi-minimax-provider` (providers)
 - `pi-mcp-adapter`, `betterwright`, `pi-cmux`, `@narumitw/pi-worktree` (tool integrations)
 - `pi-btw`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
-- `@kaishin/pi-bar` (status bar)
 
 - [x] Pick vendoring approach per plugin — copy the source into
       `packages/coding-agent/src/extensions/<name>/`, rewrite package-name imports to relative
@@ -50,6 +50,8 @@ Integrate the plugins we use directly into the repo for more control. Everything
       suite ported to vitest (7 files, 97 tests); `npm:@furbyhaxx/pi-session-naming` removed
       from user settings so `/sessions`, `/rename`, and `--list-sessions` do not collide
 - [x] Wire into the extension loader / default install
+- [x] Vendor the configured `pi-bar` footer — its active footer segments are built in; the menu,
+      configuration, shortcut, session transcript entry, and other package behavior were not carried over
 - [x] Test — focused vitest coverage for renderer registration and helper behavior, plus the
       existing user-message rendering tests
 
