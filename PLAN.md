@@ -38,14 +38,18 @@ Integrate the plugins we use directly into the repo for more control. Everything
       `builtInExtensions`
 - [x] ~~Vendor `pi-subagents`~~ — abandoned, see above
 - [ ] Vendor `pi-goal`
-- [ ] Vendor `pi-tool-display`
+- [x] Vendor `pi-tool-display` — compact built-in tool summaries, collapsible output, colored edit
+      diffs, and bordered user messages are now in core. The settings UI, configuration API,
+      debug logger, npm postinstall, and example asset were deliberately not carried over;
+      `npm:pi-tool-display` was removed from user settings to prevent collisions.
 - [x] Vendor `pi-session-naming` — 14 modules under
       `packages/coding-agent/src/extensions/session-naming/`; the two prompt templates are
       inlined in `prompts.ts` so the standalone binary needs no asset wiring; its own test
       suite ported to vitest (7 files, 97 tests); `npm:@furbyhaxx/pi-session-naming` removed
       from user settings so `/sessions`, `/rename`, and `--list-sessions` do not collide
-- [ ] Wire into the extension loader / default install
-- [ ] Test
+- [x] Wire into the extension loader / default install
+- [x] Test — focused vitest coverage for renderer registration and helper behavior, plus the
+      existing user-message rendering tests
 
 ### 3. First-class agent support
 
