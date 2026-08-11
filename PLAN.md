@@ -37,7 +37,9 @@ Integrate the plugins we use directly into the repo for more control. Everything
       internal paths, inline any file assets as TS constants, and register the factory in
       `builtInExtensions`
 - [x] ~~Vendor `pi-subagents`~~ — abandoned, see above
-- [ ] Vendor `pi-goal`
+- [x] Vendor `pi-goal` — session-scoped `/goal` persistence, continuation, token budgets,
+      status, and goal tools are built in. The goal-writer skill was not bundled because it is
+      authoring guidance rather than runtime behavior and needs standalone asset discovery.
 - [x] Vendor `pi-tool-display` — compact built-in tool summaries, collapsible output, colored edit
       diffs, and bordered user messages are now in core. The settings UI, configuration API,
       debug logger, npm postinstall, and example asset were deliberately not carried over;

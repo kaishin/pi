@@ -42,9 +42,11 @@ Everything else stays installed as regular third-party extensions.
   was not usable enough to keep. The work is preserved on the
   `subagents-vendoring-archive` branch. Do not re-vendor without deciding to
   revisit it.
-- `pi-goal` — persistent autonomous goals (`/goal`). Not started; leave for last because its
-  `skills/` directory needs the asset-discovery machinery that made the pi-subagents attempt
-  painful, and it overlaps Goal 3, which has no scope yet.
+- `pi-goal` — persistent autonomous goals (`/goal`). **Vendored (2026-08-11)** with its
+  session-scoped `/goal` lifecycle, continuation, token budgets, footer status, and goal tools.
+  The `pi-goal-writer` skill was deliberately not bundled: it is authoring guidance rather than
+  runtime behavior and would require standalone asset discovery. This does not define or expand
+  Goal 3.
 - `pi-tool-display` — compact tool-call rendering. **Vendored (2026-08-11)** as the minimal
   in-core implementation: built-in tool summaries, collapsible output, colored edit diffs, and
   bordered user messages. Its settings UI, configuration API, debug logger, npm postinstall,
