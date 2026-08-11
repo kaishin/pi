@@ -37,7 +37,7 @@ export class UserMessageComponent extends Container {
 
 	private rebuild(): void {
 		this.clear();
-		const contentBox = new Box(this.outputPad, 1, (content: string) => theme.bg("userMessageBg", content));
+		const contentBox = new Box(this.outputPad, 0, (content: string) => theme.bg("userMessageBg", content));
 		contentBox.addChild(
 			new Markdown(
 				this.text,
@@ -69,8 +69,7 @@ export class UserMessageComponent extends Container {
 			return lines;
 		}
 
-		const title = " user ";
-		const top = `${theme.fg("border", "╭")}${theme.fg("accent", theme.bold(title))}${theme.fg("border", `${"─".repeat(Math.max(0, innerWidth - visibleWidth(title)))}╮`)}`;
+		const top = `${theme.fg("border", "╭")}${theme.fg("border", `${"─".repeat(innerWidth)}╮`)}`;
 		const bottom = `${theme.fg("border", "╰")}${theme.fg("border", `${"─".repeat(innerWidth)}╯`)}`;
 		const body = lines.map((line) => {
 			const content = truncateToWidth(line, contentWidth, "", true);
