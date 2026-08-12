@@ -26,10 +26,11 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - `pi-tool-display` — compact tool-call rendering
 - `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing
 - `pi-bar` footer — fixed editorial footer with activity, usage, context, model, git, and statuses
+- `pi-worktree` (`@narumitw/pi-worktree`) — safe Git worktree management and workspace switching
 
 **Stay third-party:**
 - `@sinamtz/pi-minimax-provider` (providers)
-- `pi-mcp-adapter`, `betterwright`, `pi-cmux`, `@narumitw/pi-worktree` (tool integrations)
+- `pi-mcp-adapter`, `betterwright`, `pi-cmux` (tool integrations)
 - `pi-btw`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
 
 - [x] Pick vendoring approach per plugin — copy the source into
@@ -52,6 +53,9 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - [x] Wire into the extension loader / default install
 - [x] Vendor the configured `pi-bar` footer — its active footer segments are built in; the menu,
       configuration, shortcut, session transcript entry, and other package behavior were not carried over
+- [x] Vendor `pi-worktree` — Git safety checks, worktree sessions, root settings, and all five flows
+      are built in; the external searchable menu was intentionally replaced by standard Pi selectors and
+      status-detail notifications, avoiding `@narumitw/pi-tui-kit`.
 - [x] Test — focused vitest coverage for renderer registration and helper behavior, plus the
       existing user-message rendering tests
 
