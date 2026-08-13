@@ -27,11 +27,12 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - `pi-session-naming` (`@furbyhaxx/pi-session-naming`) — session titles/renaming/browsing
 - `pi-bar` footer — fixed editorial footer with activity, usage, context, model, git, and statuses
 - `pi-worktree` (`@narumitw/pi-worktree`) — safe Git worktree management and workspace switching
+- `rpiv-todo` (`@juicesharp/rpiv-todo`) — persistent agent task list and `/todos`
+- `pi-minimax-provider` (`@sinamtz/pi-minimax-provider`) — global MiniMax catalog and Token Plan tools
 
 **Stay third-party:**
-- `@sinamtz/pi-minimax-provider` (providers)
 - `pi-mcp-adapter`, `betterwright`, `pi-cmux` (tool integrations)
-- `pi-btw`, `pi-okf`, `@juicesharp/rpiv-todo` (workflows)
+- `pi-btw`, `pi-okf` (workflows)
 
 - [x] Pick vendoring approach per plugin — copy the source into
       `packages/coding-agent/src/extensions/<name>/`, rewrite package-name imports to relative
@@ -56,6 +57,11 @@ Integrate the plugins we use directly into the repo for more control. Everything
 - [x] Vendor `pi-worktree` — Git safety checks, worktree sessions, root settings, and all five flows
       are built in; the external searchable menu was intentionally replaced by standard Pi selectors and
       status-detail notifications, avoiding `@narumitw/pi-tui-kit`.
+- [x] Vendor `rpiv-todo` — task state/replay, tool rendering, `/todos`, and the overlay are built in;
+      its external config and localization dependencies were replaced with an optional local config and
+      English strings. The overlay now unregisters once its final completed task is hidden.
+- [x] Vendor `pi-minimax-provider` — the global MiniMax catalog and all Token Plan tools are built in;
+      the CN provider, credentials, region selection, and SDK/OAuth fallback were deliberately omitted.
 - [x] Test — focused vitest coverage for renderer registration and helper behavior, plus the
       existing user-message rendering tests
 
