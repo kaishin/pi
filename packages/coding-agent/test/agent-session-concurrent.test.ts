@@ -80,9 +80,11 @@ describe("AgentSession concurrent prompt guard", () => {
 
 	async function createSession() {
 		const model = getModel("anthropic", "claude-sonnet-4-5")!;
-		let abortSignal: AbortSignal | undefined;
 
-		// Use a stream function that responds to abort
+		// Use a stream function that responds to abort via a one-shot signal listener
+		// instead of a recursive setTimeout poll. The poll only terminates when the
+		// abort is observed, so under load a missed timer can stall the test past
+		// its 30s timeout. The listener fires synchronously on signal abort.
 		const agent = new Agent({
 			getApiKey: () => "test-key",
 			initialState: {
@@ -91,18 +93,21 @@ describe("AgentSession concurrent prompt guard", () => {
 				tools: [],
 			},
 			streamFn: (_model, _context, options) => {
-				abortSignal = options?.signal;
+				const signal = options?.signal;
 				const stream = new MockAssistantStream();
 				queueMicrotask(() => {
 					stream.push({ type: "start", partial: createAssistantMessage("") });
-					const checkAbort = () => {
-						if (abortSignal?.aborted) {
+					if (signal?.aborted) {
+						stream.push({ type: "error", reason: "aborted", error: createAssistantMessage("Aborted") });
+						return;
+					}
+					signal?.addEventListener(
+						"abort",
+						() => {
 							stream.push({ type: "error", reason: "aborted", error: createAssistantMessage("Aborted") });
-						} else {
-							setTimeout(checkAbort, 5);
-						}
-					};
-					checkAbort();
+						},
+						{ once: true },
+					);
 				});
 				return stream;
 			},
@@ -183,7 +188,6 @@ describe("AgentSession concurrent prompt guard", () => {
 
 	it("should queue extension-origin steering messages while streaming", async () => {
 		const model = getModel("anthropic", "claude-sonnet-4-5")!;
-		let abortSignal: AbortSignal | undefined;
 		let sawSteeringMessage = false;
 		let lastInputSource: string | undefined;
 		const queueEvents: Array<{ steering: readonly string[]; followUp: readonly string[] }> = [];
@@ -196,7 +200,7 @@ describe("AgentSession concurrent prompt guard", () => {
 				tools: [],
 			},
 			streamFn: (_model, context, options) => {
-				abortSignal = options?.signal;
+				const signal = options?.signal;
 				const stream = new MockAssistantStream();
 				queueMicrotask(() => {
 					const userTexts = context.messages
@@ -220,14 +224,17 @@ describe("AgentSession concurrent prompt guard", () => {
 					}
 
 					stream.push({ type: "start", partial: createAssistantMessage("") });
-					const checkAbort = () => {
-						if (abortSignal?.aborted) {
+					if (signal?.aborted) {
+						stream.push({ type: "error", reason: "aborted", error: createAssistantMessage("Aborted") });
+						return;
+					}
+					signal?.addEventListener(
+						"abort",
+						() => {
 							stream.push({ type: "error", reason: "aborted", error: createAssistantMessage("Aborted") });
-						} else {
-							setTimeout(checkAbort, 5);
-						}
-					};
-					checkAbort();
+						},
+						{ once: true },
+					);
 				});
 				return stream;
 			},
