@@ -230,12 +230,16 @@ describe("AssistantMessageComponent", () => {
 	test("uses configured output padding for user messages", () => {
 		initTheme("dark");
 
+		// UserMessageComponent.render wraps the content in a box border, so the
+		// body lines start with "│ " (border + interior space). outputPad adds
+		// an additional leading space inside the border, producing two spaces
+		// between "│" and the content when outputPad=1, and one space when 0.
 		const paddedComponent = new UserMessageComponent("hello", undefined, 1);
 		const paddedLines = paddedComponent.render(40).map((line) => stripAnsi(line));
-		expect(paddedLines.some((line) => line.startsWith(" hello"))).toBe(true);
+		expect(paddedLines.some((line) => line.includes("│  hello"))).toBe(true);
 
 		const unpaddedComponent = new UserMessageComponent("hello", undefined, 0);
 		const unpaddedLines = unpaddedComponent.render(40).map((line) => stripAnsi(line));
-		expect(unpaddedLines.some((line) => line.startsWith("hello"))).toBe(true);
+		expect(unpaddedLines.some((line) => line.includes("│ hello"))).toBe(true);
 	});
 });
