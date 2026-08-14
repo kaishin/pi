@@ -60,6 +60,19 @@ npm run check         # Lint, format, and type check
 ./pi-test.sh         # Run pi from sources (can be run from any directory)
 ```
 
+### Install locally
+
+To smoke-test your changes against an isolated install that cannot resolve workspace files:
+
+```bash
+npm run release:local -- --out /tmp/pi-local-release --force
+/tmp/pi-local-release/node/pi --version      # Node-packaged CLI
+/tmp/pi-local-release/bun/pi --version       # Bun-packaged CLI
+/tmp/pi-local-release/node/pi -p "Say exactly: ok"
+```
+
+The build runs `npm run check` and `./test.sh` first; pass `--skip-check` or `--skip-test` to bypass either. Run `/install` to automate this. See [AGENTS.md](AGENTS.md#releasing) for the full release workflow.
+
 ## Building standalone binaries from release source
 
 GitHub releases include a versioned source archive covered by the release's `SHA256SUMS` file. Extract it and run the same build script used for the official standalone binaries:
