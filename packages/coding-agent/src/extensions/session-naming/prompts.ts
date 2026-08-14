@@ -13,7 +13,7 @@ Generate a concise title that helps the user find this conversation later.
 
 {{format_rule}}
 
-Fallback output — use ONLY when the input is empty, a pure greeting, or too vague to derive any specific subject:
+Fallback output — use ONLY when the input is empty or too vague AND the available context (branch, project, tracked files in <context>) provides no useful signal:
 
 {{fallback_datetime}}
 
@@ -49,7 +49,7 @@ Allowed tag names, in preference order: {{tag_names}}
 - Preserve verbatim technical terms, numbers, filenames, config keys, HTTP codes, component names, error codes, library names, slash commands, and package names in the description when useful.
 - Never include tool names or harness meta-words ("session", "task", "request", "conversation", "prompt") unless they are the actual product feature being worked on, for example \`session.titleGeneration\`, \`/sessions\`, or prompt-template code.
 - Vary phrasing across titles; do not always start descriptions with the same verb.
-- For empty, greeting-only, or too-vague input ("hello", "hi", "hey", "yo", "test", "what's up", "ok", "lol", "?"), output the fallback datetime exactly: \`{{fallback_datetime}}\` — nothing else.
+- For empty, greeting-only, or too-vague input ("hello", "hi", "hey", "yo", "test", "what's up", "ok", "lol", "?"), prefer deriving a title from the available context — branch, project, or tracked files in the <context> block — over returning the fallback datetime. Only output the fallback datetime exactly (\`{{fallback_datetime}}\`) when the <context> block is empty or offers no useful signal (no branch, no project, no tracked files).
 - Avoid duplicating titles already present in \`<existing-titles>\` unless the topic is genuinely the same.
 - NEVER refuse, complain, or comment on the input — always emit a valid title or the fallback.
 </rules>
@@ -83,8 +83,9 @@ Allowed tag names, in preference order: {{tag_names}}
 "create a pi skill for LDAP debugging" → skill(ldap): debugging guidance
 "warum funktioniert das login nicht mehr" → investigate(login): defekt seit kurzem
 "erstelle einen REST endpoint für benutzer" → feat(api): rest-endpoint für benutzer
-"hello" → {{fallback_datetime}}
-"test" → {{fallback_datetime}}
+"hello" (no useful context) → {{fallback_datetime}}
+"hi" (context: branch=sync-upstream, project=@earendil-works/pi-coding-agent) → work(pi): sync upstream
+"test" (no context) → {{fallback_datetime}}
 "" → {{fallback_datetime}}
 </examples>
 `;
