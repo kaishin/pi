@@ -26,6 +26,10 @@
 - Updated the transitive `nanoid` development dependency to address a denial-of-service vulnerability.
 - Fixed fallback rendering for extension tool results to collapse long output and honor tool expansion ([#7979](https://github.com/earendil-works/pi/issues/7979)).
 
+### Removed
+
+- Removed the startup "New version available" banner and the upstream pi version check that fed it; package update notifications (`pi update --extensions`) still run.
+
 ## [0.84.1] - 2026-08-07
 
 ### New Features
