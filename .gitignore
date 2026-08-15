@@ -19,7 +19,9 @@ packages/ai/src/providers/.model-generation-*/
 .vscode/
 .zed/
 .idea/
-.claude/
+.claude/**
+!.claude/skills/**
+!.claude/skills/
 *.swp
 *.swo
 *~

@@ -1,0 +1,1 @@
+/Users/kaishin/Developer/Cloned/pi/.pi/skills/install.md
