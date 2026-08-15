@@ -1,1 +1,1 @@
-/Users/kaishin/Developer/Cloned/pi/.pi/skills/install.md
+../../../.pi/skills/install.md
